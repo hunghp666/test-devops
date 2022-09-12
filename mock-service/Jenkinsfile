@@ -70,7 +70,7 @@ node ('jenkins_build'){
 
 def checkout_from_reference() {
     def reponame = 'mock-service'
-    def repo_url = "https://github.com/htsoftware/ht-mobile-loyalty-server.git"
+    def repo_url = "https://github.com/hunghp666/ht-mobile-loyalty-server.git"
 
     checkout([
         $class: 'GitSCM',
