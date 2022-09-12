@@ -2,21 +2,21 @@ service:
     type: ClusterIP
     port: 8888
     targetPort: 8888
-    name: centralize-config-svc
+    name: mock-service
 
 pod: 
-    name: centralize-config-api
+    name: mock-service
     replicaCount: 2
     secretsKey: regcred
 
-ingress: 
-    name: centralize-config-api-ingress
-    host: centralize-config-api.paygate.ite.vn
-    path: /(.*)
-    certificate: tls-certificate
+#ingress:
+#    name: centralize-config-api-ingress
+#    host: centralize-config-api.paygate.ite.vn
+#    path: /(.*)
+#    certificate: tls-certificate
 
 hpa: 
-    name: "centralize-config-api-autoscaler"
+    name: "mock-service-autoscaler"
     minReplicas: 1
     maxReplicas: 3
     cpuQuota: 70
@@ -24,12 +24,12 @@ hpa:
     queueQuota: 10000
     requestsQuota: 50
     packetsQuota: 10000
-pvc: 
-    name: centralize-config-api-pvc
-    storage: 1Gi
-    labels: centralize-config-api-app
-pv: 
-    name: centralize-config-api-pv
-    storage: 1Gi
-    path: "/paygate-pv/centralize-config-api/data"
-    labels: centralize-config-api-pv
+#pvc:
+#    name: centralize-config-api-pvc
+#    storage: 1Gi
+#    labels: centralize-config-api-app
+#pv:
+#    name: centralize-config-api-pv
+#    storage: 1Gi
+#    path: "/paygate-pv/centralize-config-api/data"
+#    labels: centralize-config-api-pv

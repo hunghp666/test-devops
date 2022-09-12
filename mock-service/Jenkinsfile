@@ -6,7 +6,7 @@ def deploymentName = "mock-service"
 //No change
 def jfrogServer = "jfrogar1"
 def jfrogRepo = "hunghp666";
-def registryCredential = 'jfrogserver'
+def registryCredential = "jfrogserver"
 def registry = "testservice/${image}"
 def jFrogReg = "${jfrogRepo}/${image}"
 def Workspace = "/usr/src/workspace"
@@ -19,7 +19,8 @@ node ('jenkins_build'){
     try {
         stage('Build') {
             checkout_from_reference();
-            docker.build(registry + ":$BUILD_NUMBER", "-f pg-backend/ite-pg-configserver/Dockerfile  .")
+            sh "sudo docker build -t ${registry}:${BUILD_NUMBER} -f mock-service/Dockerfile ."
+            //docker.build(registry + ":$BUILD_NUMBER", "-f pg-backend/ite-pg-configserver/Dockerfile  .")
         }
 
         stage ('Push image to Artifactory') {
@@ -39,32 +40,32 @@ node ('jenkins_build'){
     }
 }
 
-node ('gpc_k8s'){
-    try {
-        stage('Check out git config') {
-            if (params.isCheckOutCiConfig == null || params.isCheckOutCiConfig == 'yes'){
-                echo  "${params.isCheckOutCiConfig}"
-                build job: 'k8s_ht_doc_ci_config', propagate: true, wait: true
-            }
-        }
-
-        /* stage ('Pull image from Artifactory') {
-            withCredentials([usernamePassword(credentialsId: 'jfrogserver', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                sh "docker login -u $USERNAME -p $PASSWORD $jfrogUrl$jfrogRepo"
-            }
-            sh "docker pull ${jfrogUrl}${jFrogReg}:${BUILD_NUMBER}"
-        } */
-
-        stage('Deploy on K8s'){
-            sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=${BUILD_NUMBER} --extra-vars Namespace=${Namespace}"
-        }
-
-    }catch (e) {
-        currentBuild.result = "FAILED"
-        throw e
-    } finally {
-    }
-}
+// node ('gpc_k8s'){
+//     try {
+//         stage('Check out git config') {
+//             if (params.isCheckOutCiConfig == null || params.isCheckOutCiConfig == 'yes'){
+//                 echo  "${params.isCheckOutCiConfig}"
+//                 build job: 'k8s_ht_doc_ci_config', propagate: true, wait: true
+//             }
+//         }
+//
+//         /* stage ('Pull image from Artifactory') {
+//             withCredentials([usernamePassword(credentialsId: 'jfrogserver', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+//                 sh "docker login -u $USERNAME -p $PASSWORD $jfrogUrl$jfrogRepo"
+//             }
+//             sh "docker pull ${jfrogUrl}${jFrogReg}:${BUILD_NUMBER}"
+//         } */
+//
+//         stage('Deploy on K8s'){
+//             sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=${BUILD_NUMBER} --extra-vars Namespace=${Namespace}"
+//         }
+//
+//     }catch (e) {
+//         currentBuild.result = "FAILED"
+//         throw e
+//     } finally {
+//     }
+// }
 
 
 def checkout_from_reference() {
