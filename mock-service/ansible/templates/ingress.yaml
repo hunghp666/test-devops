@@ -1,0 +1,22 @@
+# apiVersion: networking.k8s.io/v1beta1
+# kind: Ingress
+# metadata:
+#   name: {{ .Values.ingress.name }}
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /$1
+#     kubernetes.io/ingress.class: nginx
+#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#     certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.certificate }}
+# spec:
+#   tls:
+#     - hosts:
+#       -  {{ .Values.ingress.host }}
+#       secretName:  {{ .Values.ingress.certificate }}
+#   rules:
+#     - host: {{ .Values.ingress.host }}
+#       http:
+#         paths:
+#           - backend:
+#               serviceName: {{ .Values.service.name }}
+#               servicePort: {{ .Values.service.port }}
+#             path: {{ .Values.ingress.path }}

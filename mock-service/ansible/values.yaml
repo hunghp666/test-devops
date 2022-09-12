@@ -1,0 +1,35 @@
+service:
+    type: ClusterIP
+    port: 8888
+    targetPort: 8888
+    name: centralize-config-svc
+
+pod: 
+    name: centralize-config-api
+    replicaCount: 2
+    secretsKey: regcred
+
+ingress: 
+    name: centralize-config-api-ingress
+    host: centralize-config-api.paygate.ite.vn
+    path: /(.*)
+    certificate: tls-certificate
+
+hpa: 
+    name: "centralize-config-api-autoscaler"
+    minReplicas: 1
+    maxReplicas: 3
+    cpuQuota: 70
+    memoryQuota: 70
+    queueQuota: 10000
+    requestsQuota: 50
+    packetsQuota: 10000
+pvc: 
+    name: centralize-config-api-pvc
+    storage: 1Gi
+    labels: centralize-config-api-app
+pv: 
+    name: centralize-config-api-pv
+    storage: 1Gi
+    path: "/paygate-pv/centralize-config-api/data"
+    labels: centralize-config-api-pv

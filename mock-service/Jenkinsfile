@@ -1,0 +1,90 @@
+def CredentialsId = "git-be-ops"
+def image="mock-service"
+def jfrogUrl = 'https://ghcr.io/'
+def ConfigPath = "mock-service"
+def deploymentName = "mock-service"
+//No change
+def jfrogServer = "jfrogar1"
+def jfrogRepo = "hunghp666";
+def registryCredential = 'jfrogserver'
+def registry = "testservice/${image}"
+def jFrogReg = "${jfrogRepo}/${image}"
+def Workspace = "/usr/src/workspace"
+def Namespace = "develop"
+def ImageName = "${jfrogUrl}${jFrogReg}"
+def ciConfigJob="k8s_ht_doc_ci_config"
+def SourcePath = "${Workspace}/${ciConfigJob}/${ConfigPath}"
+def Path = "${SourcePath}/ansible"
+node ('jenkins_build'){
+    try {
+        stage('Build') {
+            checkout_from_reference();
+            docker.build(registry + ":$BUILD_NUMBER", "-f pg-backend/ite-pg-configserver/Dockerfile  .")
+        }
+
+        stage ('Push image to Artifactory') {
+            sh "docker tag  ${registry}:${BUILD_NUMBER} ${jfrogUrl}${jFrogReg}:${BUILD_NUMBER}"
+
+            withCredentials([usernamePassword(credentialsId: 'github_package', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh "docker login -u $USERNAME -p $PASSWORD $jfrogUrl$jfrogRepo"
+            }
+
+            sh "docker push ${jfrogUrl}${jFrogReg}:${BUILD_NUMBER}"
+
+        }
+    }catch (e) {
+    currentBuild.result = "FAILED"
+    throw e
+    } finally {
+    }
+}
+
+node ('gpc_k8s'){
+    try {
+        stage('Check out git config') {
+            if (params.isCheckOutCiConfig == null || params.isCheckOutCiConfig == 'yes'){
+                echo  "${params.isCheckOutCiConfig}"
+                build job: 'k8s_ht_doc_ci_config', propagate: true, wait: true
+            }
+        }
+
+        /* stage ('Pull image from Artifactory') {
+            withCredentials([usernamePassword(credentialsId: 'jfrogserver', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh "docker login -u $USERNAME -p $PASSWORD $jfrogUrl$jfrogRepo"
+            }
+            sh "docker pull ${jfrogUrl}${jFrogReg}:${BUILD_NUMBER}"
+        } */
+
+        stage('Deploy on K8s'){
+            sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=${BUILD_NUMBER} --extra-vars Namespace=${Namespace}"
+        }
+
+    }catch (e) {
+        currentBuild.result = "FAILED"
+        throw e
+    } finally {
+    }
+}
+
+
+def checkout_from_reference() {
+    def reponame = 'mock-service'
+    def repo_url = "https://github.com/htsoftware/ht-mobile-loyalty-server.git"
+
+    checkout([
+        $class: 'GitSCM',
+        branches: [[name: 'master']],
+        doGenerateSubmoduleConfigurations: false,
+        extensions: [
+            [$class: 'RelativeTargetDirectory', relativeTargetDir: reponame],
+            [$class: 'CloneOption', reference: "/opt/${reponame}"]
+        ],
+        submoduleCfg: [],
+        userRemoteConfigs: [
+            [credentialsId: "git_ops", url: repo_url]
+        ]
+    ])
+    dir(reponame) {
+        sh(script: "git rev-parse HEAD")
+    }
+}
