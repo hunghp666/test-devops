@@ -1,7 +1,7 @@
 service:
     type: ClusterIP
-    port: 8888
-    targetPort: 8888
+    port: 8080
+    targetPort: 8080
     name: mock-service
 
 pod: 
