@@ -13,7 +13,7 @@ def Workspace = "/usr/src/workspace"
 def Namespace = "develop"
 def ImageName = "${jfrogUrl}${jFrogReg}"
 def ciConfigJob="k8s_ht_doc_ci_config"
-def SourcePath = "${Workspace}/mock-service/${ConfigPath}"
+def SourcePath = "${Workspace}/Mock-Service/${ConfigPath}"
 def Path = "${SourcePath}/ansible"
 node ('jenkins_build'){
     try {
