@@ -12,7 +12,6 @@ def jFrogReg = "${jfrogRepo}/${image}"
 def Workspace = "/usr/src/workspace"
 def Namespace = "develop"
 def ImageName = "${jfrogUrl}${jFrogReg}"
-// def ImageName = "ghcr.io/hunghp666/mock-service"
 def ciConfigJob="k8s_ht_doc_ci_config"
 def SourcePath = "${Workspace}/Mock-Service/mock-service/${ConfigPath}"
 def Path = "${SourcePath}/ansible"
@@ -76,7 +75,6 @@ def checkout_helm() {
         sh(script: "git rev-parse HEAD")
     }
 }
-
 
 def checkout_from_reference() {
     def reponame = 'mock-service'
