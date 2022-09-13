@@ -13,7 +13,7 @@ def Workspace = "/usr/src/workspace"
 def Namespace = "develop"
 def ImageName = "${jfrogUrl}${jFrogReg}"
 def ciConfigJob="k8s_ht_doc_ci_config"
-def SourcePath = "${Workspace}/Mock-Service/${ConfigPath}"
+def SourcePath = "${Workspace}/mock-service/${ConfigPath}"
 def Path = "${SourcePath}/ansible"
 node ('jenkins_build'){
     try {
@@ -43,6 +43,7 @@ node ('jenkins_build'){
 node ('gpc_k8s'){
     try {
         stage('Deploy on K8s'){
+            checkout_helm();
             sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=${BUILD_NUMBER} --extra-vars Namespace=${Namespace}"
         }
 
@@ -50,6 +51,28 @@ node ('gpc_k8s'){
         currentBuild.result = "FAILED"
         throw e
     } finally {
+    }
+}
+
+def checkout_helm() {
+    def reponame = 'mock-service'
+    def repo_url = "https://github.com/hunghp666/test-devops.git"
+
+    checkout([
+        $class: 'GitSCM',
+        branches: [[name: 'master']],
+        doGenerateSubmoduleConfigurations: false,
+        extensions: [
+            [$class: 'RelativeTargetDirectory', relativeTargetDir: reponame],
+            [$class: 'CloneOption', reference: "${Workspace}"]
+        ],
+        submoduleCfg: [],
+        userRemoteConfigs: [
+            [credentialsId: "git_ops", url: repo_url]
+        ]
+    ])
+    dir(reponame) {
+        sh(script: "git rev-parse HEAD")
     }
 }
 
