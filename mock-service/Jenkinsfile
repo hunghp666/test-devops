@@ -1,6 +1,6 @@
 def CredentialsId = "git-be-ops"
 def image="mock-service"
-def jfrogUrl = 'https://ghcr.io/'
+def jfrogUrl = 'ghcr.io/'
 def ConfigPath = "mock-service"
 def deploymentName = "mock-service"
 //No change
@@ -24,13 +24,13 @@ node ('jenkins_build'){
         }
 
         stage ('Push image to Artifactory') {
-            sh "docker tag  ${registry}:${BUILD_NUMBER} ${jfrogUrl}${jFrogReg}:${BUILD_NUMBER}"
+            sh "sudo docker tag  ${registry}:${BUILD_NUMBER} ${jfrogUrl}${jFrogReg}:${BUILD_NUMBER}"
 
             withCredentials([usernamePassword(credentialsId: 'github_package', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                sh "docker login -u $USERNAME -p $PASSWORD $jfrogUrl$jfrogRepo"
+                sh "sudo docker login -u $USERNAME -p $PASSWORD $jfrogUrl$jfrogRepo"
             }
 
-            sh "docker push ${jfrogUrl}${jFrogReg}:${BUILD_NUMBER}"
+            sh "sudo docker push ${jfrogUrl}${jFrogReg}:${BUILD_NUMBER}"
 
         }
     }catch (e) {
