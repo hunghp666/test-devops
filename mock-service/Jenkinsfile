@@ -45,7 +45,7 @@ node ('gpc_k8s'){
     try {
         stage('Deploy on K8s'){
             checkout_helm();
-            sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=1.0.0 --extra-vars Namespace=${Namespace}"
+            sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=1.0.1 --extra-vars Namespace=${Namespace}"
         }
 
     }catch (e) {
