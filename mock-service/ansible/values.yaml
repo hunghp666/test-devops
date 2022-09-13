@@ -9,11 +9,11 @@ pod:
     replicaCount: 2
     secretsKey: regcred
 
-#ingress:
-#    name: centralize-config-api-ingress
-#    host: centralize-config-api.paygate.ite.vn
-#    path: /(.*)
-#    certificate: tls-certificate
+ingress:
+    name: centralize-config-api-ingress
+    host: centralize-config-api.paygate.ite.vn
+    path: /(.*)
+    certificate: tls-certificate
 
 hpa: 
     name: "mock-service-autoscaler"
