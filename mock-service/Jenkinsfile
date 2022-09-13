@@ -12,7 +12,7 @@ def jFrogReg = "${jfrogRepo}/${image}"
 def Workspace = "/usr/src/workspace"
 def Namespace = "develop"
 // def ImageName = "${jfrogUrl}${jFrogReg}"
-def ImageName = "hunghp666/mock-service:1.0.0"
+def ImageName = "hunghp666/mock-service"
 def ciConfigJob="k8s_ht_doc_ci_config"
 def SourcePath = "${Workspace}/Mock-Service/mock-service/${ConfigPath}"
 def Path = "${SourcePath}/ansible"
@@ -45,7 +45,7 @@ node ('gpc_k8s'){
     try {
         stage('Deploy on K8s'){
             checkout_helm();
-            sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=1.0.1 --extra-vars Namespace=${Namespace}"
+            sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=1.0.0 --extra-vars Namespace=${Namespace}"
         }
 
     }catch (e) {
