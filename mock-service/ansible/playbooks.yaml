@@ -14,7 +14,7 @@
       command: "helm install {{HelmName}} --namespace={{ Namespace }} {{Path}} --set image.name={{ ImageName }} --set image.tag={{ ImageTag }} --set namespace={{ Namespace }}"
       delegate_to: localhost
       ignore_errors: yes
-    - name: Update helm project
-      command: "helm upgrade --wait --recreate-pods --namespace={{ Namespace }} --set image.name={{ ImageName }} --set image.tag={{ ImageTag }} --set namespace={{ Namespace }} {{HelmName}} {{Path}}"
-      delegate_to: localhost
-      ignore_errors: yes
+#    - name: Update helm project
+#      command: "helm upgrade --wait --recreate-pods --namespace={{ Namespace }} --set image.name={{ ImageName }} --set image.tag={{ ImageTag }} --set namespace={{ Namespace }} {{HelmName}} {{Path}}"
+#      delegate_to: localhost
+#      ignore_errors: yes
