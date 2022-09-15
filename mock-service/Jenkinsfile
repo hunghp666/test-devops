@@ -44,7 +44,8 @@ node ('gpc_k8s'){
     try {
         stage('Deploy on K8s'){
             checkout_helm();
-            sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=1.0.1 --extra-vars Namespace=${Namespace}"
+            sh "helm upgrade -i --wait --recreate-pods --namespace=${Namespace} --set image.name=${ImageName} --set image.tag=1.0.1 --set namespace=${Namespace} ${deploymentName} ${Path}"
+            //sh "ansible-playbook ${SourcePath}/ansible/playbooks.yaml  --user=root --extra-vars HelmName=${deploymentName}  --extra-vars Path=${Path} --extra-vars ImageName=${ImageName} --extra-vars ImageTag=1.0.1 --extra-vars Namespace=${Namespace}"
         }
 
     }catch (e) {
