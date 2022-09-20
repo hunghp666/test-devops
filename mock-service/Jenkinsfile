@@ -14,7 +14,7 @@ def Namespace = "develop"
 def ImageName = "${jfrogUrl}${jFrogReg}"
 def ciConfigJob="k8s_ht_doc_ci_config"
 def SourcePath = "${Workspace}/Mock-Service/mock-service/${ConfigPath}"
-def Path = "${SourcePath}/ansible"
+def Path = "${SourcePath}/helm"
 node ('jenkins_build'){
     try {
         stage('Build') {
