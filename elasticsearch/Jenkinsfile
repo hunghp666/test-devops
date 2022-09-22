@@ -1,10 +1,11 @@
 def CredentialsId = "git-be-ops"
 
-def ConfigPath = "mongodb-stateful"
-def HelmName = "mongodb-stateful"
-def Workspace = "/usr/src/workspace/k8s_ht_doc_ci_config"
+def ConfigPath = "elasticsearch"
+def deploymentName = "elastic-search"
+def Workspace = "/usr/src/workspace/test-devops"
 def Namespace = "develop"
 def SourcePath = "${Workspace}/${ConfigPath}"
+
 node ('gpc_k8s'){
     try {
         stage('Check out helm chart') {
@@ -12,7 +13,7 @@ node ('gpc_k8s'){
         }
 
         stage ('Deploy Elastic Search') {
-            sh "helm upgrade -i --wait --recreate-pods --namespace=${Namespace}"
+            sh "helm upgrade -i --wait --recreate-pods --namespace=${Namespace} ${deploymentName} ${SourcePath}"
         }
     }catch (e) {
     currentBuild.result = "FAILED"
