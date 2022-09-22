@@ -2,7 +2,7 @@ def CredentialsId = "git-be-ops"
 
 def ConfigPath = "kibana"
 def deploymentName = "kibana"
-def Workspace = "/usr/src/workspace/ElasticSearch/test-devops"
+def Workspace = "/usr/src/workspace/Kibana/test-devops"
 def Namespace = "develop"
 def SourcePath = "${Workspace}/${ConfigPath}"
 
