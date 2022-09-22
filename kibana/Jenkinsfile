@@ -1,0 +1,44 @@
+def CredentialsId = "git-be-ops"
+
+def ConfigPath = "kibana"
+def deploymentName = "kibana"
+def Workspace = "/usr/src/workspace/ElasticSearch/test-devops"
+def Namespace = "develop"
+def SourcePath = "${Workspace}/${ConfigPath}"
+
+node ('gpc_k8s'){
+    try {
+        stage('Check out helm chart') {
+            checkout_helm();
+        }
+
+        stage ('Deploy Elastic Search') {
+            sh "helm upgrade -i --wait --recreate-pods --namespace=${Namespace} ${deploymentName} ${SourcePath}"
+        }
+    }catch (e) {
+    currentBuild.result = "FAILED"
+    throw e
+    }
+}
+
+def checkout_helm() {
+    def reponame = 'test-devops'
+    def repo_url = "https://github.com/hunghp666/test-devops.git"
+
+    checkout([
+        $class: 'GitSCM',
+        branches: [[name: 'main']],
+        doGenerateSubmoduleConfigurations: false,
+        extensions: [
+            [$class: 'RelativeTargetDirectory', relativeTargetDir: reponame],
+            [$class: 'CloneOption', reference: "${Workspace}"]
+        ],
+        submoduleCfg: [],
+        userRemoteConfigs: [
+            [credentialsId: "git_ops", url: repo_url]
+        ]
+    ])
+    dir(reponame) {
+        sh(script: "git rev-parse HEAD")
+    }
+}
