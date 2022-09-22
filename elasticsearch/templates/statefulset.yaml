@@ -26,6 +26,8 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: {{ template "elasticsearch.uname" . }}
+      annotations:
+        volume.beta.kubernetes.io/storage-class: "standard"
     {{- if .Values.persistence.labels.enabled }}
       labels:
         release: {{ .Release.Name | quote }}
