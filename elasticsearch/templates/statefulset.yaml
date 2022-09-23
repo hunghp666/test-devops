@@ -36,7 +36,7 @@ spec:
         {{- end }}
     {{- end }}
       annotations:
-        volume.beta.kubernetes.io/storage-class: "standard"
+        volume.beta.kubernetes.io/storage-class: "local"
     spec:
 {{ toYaml .Values.volumeClaimTemplate | indent 6 }}
   {{- end }}
