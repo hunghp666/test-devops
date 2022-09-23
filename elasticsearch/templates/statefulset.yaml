@@ -35,11 +35,8 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
     {{- end }}
-    {{- with .Values.persistence.annotations  }}
       annotations:
         volume.beta.kubernetes.io/storage-class: "standard"
-{{ toYaml . | indent 8 }}
-    {{- end }}
     spec:
 {{ toYaml .Values.volumeClaimTemplate | indent 6 }}
   {{- end }}
