@@ -97,6 +97,7 @@ initResources:
 networkHost: "0.0.0.0"
 
 volumeClaimTemplate:
+  storageClassName: my-storageclass
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
