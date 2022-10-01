@@ -117,10 +117,10 @@ updateStrategy:
   type: "Recreate"
 
 service:
-  type: ClusterIP
+  type: NodePort
   loadBalancerIP: ""
   port: 5601
-  nodePort: ""
+  nodePort: 5601
   labels: {}
   annotations:
     {}
