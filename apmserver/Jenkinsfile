@@ -2,7 +2,7 @@ def CredentialsId = "git-be-ops"
 
 def ConfigPath = "apmserver"
 def deploymentName = "apmserver"
-def Workspace = "/usr/src/workspace/Apmserver/test-devops"
+def Workspace = "/usr/src/workspace/apmserver/test-devops"
 def Namespace = "develop"
 def SourcePath = "${Workspace}/${ConfigPath}"
 
