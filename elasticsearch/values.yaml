@@ -97,11 +97,11 @@ initResources:
 networkHost: "0.0.0.0"
 
 volumeClaimTemplate:
-  storageClassName: my-storageclass
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
       storage: 2Gi
+  volumeMode: Filesystem
 
 rbac:
   create: false
