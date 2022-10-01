@@ -23,12 +23,12 @@ spec:
         resources:
       - name: filebeat
         image: "docker.elastic.co/beats/filebeat:7.15.0"
-        volumeMounts:
-          - name: shared-logs
-            mountPath: /var/log/
-          - name: filebeat-config
-            mountPath: /usr/share/filebeat/filebeat.yml
-            subPath: filebeat.yml
+#        volumeMounts:
+#          - name: shared-logs
+#            mountPath: /var/log/
+#          - name: filebeat-config
+#            mountPath: /usr/share/filebeat/filebeat.yml
+#            subPath: filebeat.yml
         resources:
           requests:
             cpu: 50m
